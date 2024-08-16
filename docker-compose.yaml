@@ -1,0 +1,31 @@
+version: "3.9"
+networks:
+  website:
+    name: website
+    driver: bridge
+services:
+  test-api:
+    container_name: test-api
+    image: webdevops/php-nginx:8.3
+    tty: true
+    ports:
+      - 9999:80
+    volumes:
+      - ./test/api/:/app
+    networks:
+      - website
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.2-bionic
+    restart: always
+    tty: true
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database/mariadb/data:/var/lib/mysql
+    networks:
+      - website
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
